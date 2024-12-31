@@ -16,7 +16,11 @@ function WindshieldAndGlass() {
   const [booking, setBooking] = useState({
     date: "",
     time: "",
+    mechanic: "",
   });
+  const [mechanics, setMechanics] = useState([]);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [bookingConfirmed, setBookingConfirmed] = useState(false); // Track if the booking is confirmed
 
   // Initialize the navigate function
   const navigate = useNavigate();
@@ -30,7 +34,6 @@ function WindshieldAndGlass() {
   // Handling service selection
   const handleServiceChange = (e) => {
     setServiceType(e.target.value);
-    console.log("Service Type Changed: ", e.target.value); // Debugging log to check serviceType
   };
 
   // Handling file upload
@@ -41,301 +44,235 @@ function WindshieldAndGlass() {
 
   // Handling estimate submission
   const getEstimate = () => {
-    console.log("getEstimate function triggered!");
-    console.log("Selected Service Type:", serviceType); // Debugging log to check serviceType
-
     if (serviceType) {
       let cost;
       let time;
-      // Estimate based on selected service
       if (serviceType === "windshieldReplace") {
         cost = 800;
         time = "1-2 days";
       } else if (serviceType === "glassRepair") {
         cost = 400;
         time = "Same day";
-      } else {
-        cost = 0;
-        time = "Unknown";
       }
-
-      console.log("Calculated Estimate:", { cost, time }); // Debugging log for calculated estimate
-
-      // Update state for estimate
       setEstimate({ cost, time });
     } else {
-      // Handle case when no service is selected
       setEstimate({ cost: 0, time: "Please select a service" });
     }
   };
 
-  // Handling booking form submission
-  const handleBooking = (e) => {
-    e.preventDefault();
-    console.log("Booking details:", booking);
-    // alert("Booking confirmed!");
+  // Handling mechanic availability based on selected date
+  const handleDateChange = (e) => {
+    const selectedDate = e.target.value;
+    setBooking({ ...booking, date: selectedDate });
 
-    // Navigate to the payment gateway page after booking confirmation
-    navigate("/paymentButton"); // Replace '/paymentGateway' with the actual route to your payment gateway page
+    // Example mechanic availability based on selected date
+    const mechanicsAvailability = {
+      "2024-12-31": [
+        { name: "John", timeSlots: ["10:00 AM", "2:00 PM"] },
+        { name: "Alice", timeSlots: ["9:00 AM", "1:00 PM"] },
+      ],
+      "2024-01-01": [
+        { name: "Tom", timeSlots: ["10:00 AM", "1:00 PM"] },
+        { name: "Jane", timeSlots: ["11:00 AM", "3:00 PM"] },
+      ],
+    };
+
+    if (mechanicsAvailability[selectedDate]) {
+      setMechanics(mechanicsAvailability[selectedDate]);
+      setBooking((prevBooking) => ({
+        ...prevBooking,
+        mechanic: "",
+        time: "",
+      }));
+      setErrorMessage(""); // Clear error message when valid date is selected
+    } else {
+      setMechanics([]);
+      setBooking((prevBooking) => ({
+        ...prevBooking,
+        mechanic: "",
+        time: "",
+      }));
+      setErrorMessage("No mechanics available for this date. Please choose a different date.");
+    }
   };
+
+  // Handling mechanic selection
+  const handleMechanicChange = (e) => {
+    const selectedMechanic = e.target.value;
+    setBooking({ ...booking, mechanic: selectedMechanic });
+  };
+
+  // Handling time selection
+  const handleTimeChange = (e) => {
+    const selectedTime = e.target.value;
+    setBooking({ ...booking, time: selectedTime });
+  };
+
+  // Handle the booking confirmation (show confirmation page)
+  const confirmBooking = () => {
+    setBookingConfirmed(true);
+  };
+
+  // Disable the "Confirm Booking" button if the date and time are not selected
+  const isBookingDisabled = !booking.date || !booking.time;
 
   return (
     <div className="container">
-      {/* Service Selection */}
-      <div className="service-selection">
-        <h2>Select Your Windshield and Glass Service</h2>
-        <select value={serviceType} onChange={handleServiceChange}>
-          <option value="">--Select Service--</option>
-          <option value="windshieldReplace">Windshield Replacement</option>
-          <option value="glassRepair">Glass Repair</option>
-        </select>
-        <button onClick={getEstimate}>Get Estimate</button>
-      </div>
-
-      {/* Vehicle Information Form */}
-      <div className="vehicle-info">
-        <h2>Vehicle Information</h2>
-        <input
-          type="text"
-          name="make"
-          placeholder="Car Company"
-          value={vehicleInfo.make}
-          onChange={handleVehicleChange}
-        />
-        <input
-          type="text"
-          name="model"
-          placeholder="Car Model"
-          value={vehicleInfo.model}
-          onChange={handleVehicleChange}
-        />
-        <input
-          type="number"
-          name="year"
-          placeholder="Car Year"
-          value={vehicleInfo.year}
-          onChange={handleVehicleChange}
-        />
-        <input
-          type="text"
-          name="plate"
-          placeholder="License Plate"
-          value={vehicleInfo.plate}
-          onChange={handleVehicleChange}
-        />
-      </div>
-
-      {/* Image Upload Section */}
-      <div className="image-upload">
-        <h2>Upload Vehicle Images</h2>
-        <input type="file" multiple onChange={handleImageUpload} />
-      </div>
-
-      {/* Estimate Section */}
-      {estimate && (
-        <div className="estimate">
-          <h2>Estimated Cost & Timeline</h2>
-          <p>Cost: ₹ {estimate.cost}</p>
-          <p>Estimated Time: {estimate.time}</p>
+      {/* Show confirmation page if booking is confirmed */}
+      {bookingConfirmed ? (
+        <div className="confirmation-page">
+          <h1>Booking Confirmation</h1>
+          <p><strong>Vehicle:</strong> {vehicleInfo.make} {vehicleInfo.model}</p>
+          <p><strong> Date:</strong> {booking.date}</p>
+          <p><strong>Contact Name:</strong> {vehicleInfo.make}</p>
+          <p><strong>Contact Phone:</strong> {vehicleInfo.plate}</p>
+          <p><strong>Selected Mechanic:</strong> {booking.mechanic}</p>
+          <p><strong>Selected Time:</strong> {booking.time}</p>
+          <button onClick={() => navigate("/paymentButton")}>Confirm Booking</button>
         </div>
+      ) : (
+        // Show booking form if booking is not confirmed
+        <>
+          <div className="service-selection">
+            <h2>Select Your Windshield and Glass Service</h2>
+            <select value={serviceType} onChange={handleServiceChange}>
+              <option value="">--Select Service--</option>
+              <option value="windshieldReplace">Windshield Replacement</option>
+              <option value="glassRepair">Glass Repair</option>
+            </select>
+            <button onClick={getEstimate}>Get Estimate</button>
+          </div>
+
+          <div className="vehicle-info">
+            <h2>Vehicle Information</h2>
+            <input
+              type="text"
+              name="make"
+              placeholder="Car Company"
+              value={vehicleInfo.make}
+              onChange={handleVehicleChange}
+            />
+            <input
+              type="text"
+              name="model"
+              placeholder="Car Model"
+              value={vehicleInfo.model}
+              onChange={handleVehicleChange}
+            />
+            <input
+              type="number"
+              name="year"
+              placeholder="Car Year"
+              value={vehicleInfo.year}
+              onChange={handleVehicleChange}
+            />
+            <input
+              type="text"
+              name="plate"
+              placeholder="License Plate"
+              value={vehicleInfo.plate}
+              onChange={handleVehicleChange}
+            />
+          </div>
+
+          <div className="image-upload">
+            <h2>Upload Vehicle Images</h2>
+            <input type="file" multiple onChange={handleImageUpload} />
+          </div>
+
+          {estimate && (
+            <div className="estimate">
+              <h2>Estimated Cost & Timeline</h2>
+              <p>Cost: ₹ {estimate.cost}</p>
+              <p>Estimated Time: {estimate.time}</p>
+            </div>
+          )}
+
+          <div className="date-selection">
+            <h2>Select Date for Booking</h2>
+            <input
+              type="date"
+              value={booking.date}
+              onChange={handleDateChange}
+              required
+            />
+          </div>
+
+          {mechanics.length > 0 && (
+            <div className="mechanic-selection">
+              <h2>Select Mechanic</h2>
+              <select value={booking.mechanic} onChange={handleMechanicChange}>
+                <option value="">--Select Mechanic--</option>
+                {mechanics.map((mechanic, index) => (
+                  <option key={index} value={mechanic.name}>
+                    {mechanic.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+
+          {booking.mechanic && (
+            <div className="time-selection">
+              <h2>Select Time</h2>
+              <select value={booking.time} onChange={handleTimeChange}>
+                <option value="">--Select Time--</option>
+                {mechanics
+                  .find((m) => m.name === booking.mechanic)
+                  ?.timeSlots.map((time, index) => (
+                    <option key={index} value={time}>
+                      {time}
+                    </option>
+                  ))}
+              </select>
+            </div>
+          )}
+
+          {errorMessage && <div className="error">{errorMessage}</div>}
+
+          <div className="booking">
+            <h2>Book Your Service</h2>
+            <button onClick={confirmBooking} disabled={isBookingDisabled}>
+              Book Appointment
+            </button>
+          </div>
+        </>
       )}
-
-      {/* Booking Form */}
-      <div className="booking">
-        <h2>Book Your Service</h2>
-        <form onSubmit={handleBooking}>
-          <input
-            type="date"
-            value={booking.date}
-            onChange={(e) => setBooking({ ...booking, date: e.target.value })}
-            required
-          />
-          <input
-            type="time"
-            value={booking.time}
-            onChange={(e) => setBooking({ ...booking, time: e.target.value })}
-            required
-          />
-          <button type="submit">Confirm Booking</button>
-        </form>
-      </div>
-
       <style jsx="true">{`
-  /* Global container styling */
-  .container {
-    font-family: 'Roboto', sans-serif;
-    background-color: #f4f4f9;
-    padding: 40px;
-    margin: auto;
-    max-width: 900px;
-    border-radius: 15px;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
-  }
-
-  /* Hover effect for the container */
-  .container:hover {
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-  }
-
-  /* Section container styling */
-  .service-selection,
-  .vehicle-info,
-  .image-upload,
-  .estimate,
-  .booking {
-    margin-bottom: 30px;
-    padding: 25px;
-    background-color: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  }
-
-  /* Heading styling */
-  h2 {
-    font-size: 1.75rem;
-    color: #333;
-    margin-bottom: 20px;
-    text-align: center;
-  }
-
-  /* Styling the service selection dropdown */
-  select {
-    width: 100%;
-    padding: 12px;
-    margin: 10px 0;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    font-size: 1rem;
-    transition: all 0.3s ease;
-  }
-
-  /* Styling for select on focus */
-  select:focus {
-    border-color: #4caf50;
-    box-shadow: 0 0 4px rgba(76, 175, 80, 0.4);
-    outline: none;
-  }
-
-  /* Styling for form input fields */
-  input[type="text"],
-  input[type="number"],
-  input[type="file"],
-  input[type="date"],
-  input[type="time"] {
-    width: 100%;
-    padding: 12px;
-    margin: 10px 0;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    font-size: 1rem;
-    box-sizing: border-box;
-    transition: all 0.3s ease;
-  }
-
-  /* Focus effect for input fields */
-  input[type="text"]:focus,
-  input[type="number"]:focus,
-  input[type="file"]:focus,
-  input[type="date"]:focus,
-  input[type="time"]:focus {
-    border-color: #4caf50;
-    box-shadow: 0 0 4px rgba(76, 175, 80, 0.4);
-    outline: none;
-  }
-
-  /* Button styling */
-  button {
-    padding: 12px 20px;
-    background-color: #4caf50;
-    color: white;
-    font-size: 1.1rem;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.3s ease;
-    width: 100%;
-  }
-
-  /* Hover effect for buttons */
-  button:hover {
-    background-color: #45a049;
-    transform: translateY(-2px);
-  }
-
-  /* Disabled button state */
-  button:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-  }
-
-  /* Estimate section styling */
-  .estimate {
-    background-color: #e8f4e5;
-    color: #333;
-    padding: 20px;
-    border-radius: 8px;
-    font-size: 1.1rem;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  }
-
-  /* Image upload section */
-  .image-upload input[type="file"] {
-    padding: 12px;
-    font-size: 1rem;
-    border-radius: 8px;
-  }
-
-  /* Booking form styling */
-  .booking {
-    display: grid;
-    gap: 20px;
-  }
-
-  .booking input[type="date"],
-  .booking input[type="time"] {
-    width: 100%;
-  }
-
-  /* Responsive design for smaller screens */
-  @media (max-width: 768px) {
-    .container {
-      padding: 20px;
-      width: 100%;
-    }
-
-    h2 {
-      font-size: 1.6rem;
-    }
-
-    button {
-      padding: 10px;
-    }
-
-    .service-selection,
-    .vehicle-info,
-    .image-upload,
-    .estimate,
-    .booking {
-      padding: 20px;
-    }
-  }
-
-  @media (max-width: 480px) {
-    .container {
-      padding: 15px;
-    }
-
-    h2 {
-      font-size: 1.5rem;
-    }
-
-    button {
-      padding: 12px;
-    }
-  }
-`}</style>
-
+        .container {
+          font-family: 'Roboto', sans-serif;
+          background-color: #f4f4f9;
+          padding: 40px;
+          margin: auto;
+          max-width: 900px;
+          border-radius: 15px;
+          box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+          transition: all 0.3s ease;
+        }
+        .confirmation-page {
+          text-align: center;
+          padding: 20px;
+          background-color: #e8f4e5;
+          border-radius: 8px;
+        }
+        .confirmation-page button {
+          padding: 12px 20px;
+          background-color: #4caf50;
+          color: white;
+          border: none;
+          border-radius: 8px;
+          cursor: pointer;
+        }
+        .confirmation-page button:hover {
+          background-color: #45a049;
+        }
+        .error {
+          color: red;
+          font-size: 1.2rem;
+          text-align: center;
+          margin-top: 20px;
+        }
+      `}</style>
     </div>
   );
 }

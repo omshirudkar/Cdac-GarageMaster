@@ -89,6 +89,7 @@ function DentingAndPainting() {
     const selectedDate = e.target.value;
     setBooking((prev) => ({ ...prev, date: selectedDate }));
     setAvailableMechanics([]); // Reset mechanics list
+    setBooking((prev) => ({ ...prev, mechanic: "", time: "" })); // Reset mechanic and time
 
     const available = mechanicsList.filter((mechanic) =>
       mechanic.availableDates.includes(selectedDate)
@@ -108,10 +109,11 @@ function DentingAndPainting() {
     const selectedMechanic = availableMechanics.find(
       (mechanic) => mechanic.name === selectedMechanicName
     );
-    setBooking((prev) => ({ ...prev, mechanic: selectedMechanicName }));
-    setAvailableMechanics(
-      selectedMechanic ? selectedMechanic.availableTimes : []
-    );
+    setBooking((prev) => ({
+      ...prev,
+      mechanic: selectedMechanicName,
+      time: "", // Reset time when mechanic changes
+    }));
   };
 
   // Handle time selection
@@ -288,12 +290,22 @@ function DentingAndPainting() {
           border-radius: 6px;
           cursor: pointer;
           font-size: 1.2em;
-          transition: background-color 0.3s ease;
           width: 100%;
         }
 
         button:hover {
           background-color: #45a049;
+        }
+
+        .service-selection,
+        .vehicle-info,
+        .image-upload,
+        .estimate,
+        .date-selection,
+        .mechanics,
+        .time-selection,
+        .booking {
+          margin-bottom: 20px;
         }
       `}</style>
     </div>

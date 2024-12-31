@@ -18,7 +18,23 @@ function CarWash() {
   const [booking, setBooking] = useState({
     date: "",
     time: "",
+    mechanic: "",
   });
+  const [mechanics, setMechanics] = useState([]);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [bookingConfirmed, setBookingConfirmed] = useState(false);
+
+  // Available mechanics for different dates
+  const mechanicsAvailability = {
+    "2024-12-31": [
+      { name: "John", timeSlots: ["10:00 AM", "2:00 PM"] },
+      { name: "Alice", timeSlots: ["9:00 AM", "1:00 PM"] },
+    ],
+    "2024-01-01": [
+      { name: "Tom", timeSlots: ["10:00 AM", "1:00 PM"] },
+      { name: "Jane", timeSlots: ["11:00 AM", "3:00 PM"] },
+    ],
+  };
 
   // Handling form change for vehicle info
   const handleVehicleChange = (e) => {
@@ -29,7 +45,6 @@ function CarWash() {
   // Handling service selection
   const handleServiceChange = (e) => {
     setServiceType(e.target.value);
-    console.log("Service Type Changed: ", e.target.value); // Debugging log to check serviceType
   };
 
   // Handling file upload
@@ -40,9 +55,6 @@ function CarWash() {
 
   // Handling estimate submission
   const getEstimate = () => {
-    console.log("getEstimate function triggered!");
-    console.log("Selected Service Type:", serviceType); // Debugging log to check serviceType
-
     if (serviceType) {
       let cost;
       let time;
@@ -61,108 +73,181 @@ function CarWash() {
         time = "Unknown";
       }
 
-      console.log("Calculated Estimate:", { cost, time }); // Debugging log for calculated estimate
-
       // Update state for estimate
       setEstimate({ cost, time });
     } else {
-      // Handle case when no service is selected
       setEstimate({ cost: 0, time: "Please select a service" });
     }
   };
 
-  // Handling booking form submission and redirect to payment
+  // Handling booking form submission
   const handleBooking = (e) => {
     e.preventDefault();
-    console.log("Booking details:", booking);
-    // alert("Booking confirmed!");
-    
-    // Redirect to the payment gateway page after booking is confirmed
-    navigate("/paymentButton"); // Replace "/payment" with the actual path to your payment gateway component
+    if (!booking.date || !booking.time || !booking.mechanic) {
+      setErrorMessage("Please fill in all the details (Date, Mechanic, and Time).");
+    } else {
+      setBookingConfirmed(true);
+    }
   };
+
+  // Handling date change
+  const handleDateChange = (e) => {
+    const selectedDate = e.target.value;
+    setBooking({ ...booking, date: selectedDate, mechanic: "", time: "" }); // Reset mechanic and time
+    setErrorMessage(""); // Clear any previous error message
+
+    if (mechanicsAvailability[selectedDate]) {
+      setMechanics(mechanicsAvailability[selectedDate]);
+    } else {
+      setMechanics([]);
+      setErrorMessage("No mechanics available for this date. Please choose a different date.");
+    }
+  };
+
+  // Handling mechanic change
+  const handleMechanicChange = (e) => {
+    const selectedMechanic = e.target.value;
+    setBooking({ ...booking, mechanic: selectedMechanic, time: "" }); // Reset time when mechanic is changed
+  };
+
+  // Handling time change
+  const handleTimeChange = (e) => {
+    const selectedTime = e.target.value;
+    setBooking({ ...booking, time: selectedTime });
+  };
+
+  // Check if booking is ready
+  const isBookingReady = booking.date && booking.time && booking.mechanic;
 
   return (
     <div className="container">
-      {/* Service Selection */}
-      <div className="service-selection">
-        <h2>Select Your Car Wash Service</h2>
-        <select value={serviceType} onChange={handleServiceChange}>
-          <option value="">--Select Service--</option>
-          <option value="basic">Basic Wash</option>
-          <option value="premium">Premium Wash</option>
-          <option value="deluxe">Deluxe Wash</option>
-        </select>
-        <button onClick={getEstimate}>Get Estimate</button>
-      </div>
-
-      {/* Vehicle Information Form */}
-      <div className="vehicle-info">
-        <h2>Vehicle Information</h2>
-        <input
-          type="text"
-          name="make"
-          placeholder="Car Company"
-          value={vehicleInfo.make}
-          onChange={handleVehicleChange}
-        />
-        <input
-          type="text"
-          name="model"
-          placeholder="Car Model"
-          value={vehicleInfo.model}
-          onChange={handleVehicleChange}
-        />
-        <input
-          type="number"
-          name="year"
-          placeholder="Car Year"
-          value={vehicleInfo.year}
-          onChange={handleVehicleChange}
-        />
-        <input
-          type="text"
-          name="plate"
-          placeholder="License Plate"
-          value={vehicleInfo.plate}
-          onChange={handleVehicleChange}
-        />
-      </div>
-
-      {/* Image Upload Section */}
-      <div className="image-upload">
-        <h2>Upload Vehicle Images</h2>
-        <input type="file" multiple onChange={handleImageUpload} />
-      </div>
-
-      {/* Estimate Section */}
-      {estimate && (
-        <div className="estimate">
-          <h2>Estimated Cost & Timeline</h2>
-          <p>Cost: ₹ {estimate.cost}</p>
-          <p>Estimated Time: {estimate.time}</p>
+      {bookingConfirmed ? (
+        <div className="confirmation-page">
+          <h1>Booking Confirmation</h1>
+          <p><strong>Vehicle:</strong> {vehicleInfo.make} {vehicleInfo.model}</p>
+          <p><strong>Booking Date:</strong> {booking.date}</p>
+          <p><strong>Selected Mechanic:</strong> {booking.mechanic}</p>
+          <p><strong>Selected Time:</strong> {booking.time}</p>
+          <button onClick={() => navigate("/paymentButton")}>Proceed to Payment</button>
         </div>
+      ) : (
+        <>
+          {/* Service Selection */}
+          <div className="service-selection">
+            <h2>Select Your Car Wash Service</h2>
+            <select value={serviceType} onChange={handleServiceChange}>
+              <option value="">--Select Service--</option>
+              <option value="basic">Basic Wash</option>
+              <option value="premium">Premium Wash</option>
+              <option value="deluxe">Deluxe Wash</option>
+            </select>
+            <button onClick={getEstimate}>Get Estimate</button>
+          </div>
+
+          {/* Vehicle Information Form */}
+          <div className="vehicle-info">
+            <h2>Vehicle Information</h2>
+            <input
+              type="text"
+              name="make"
+              placeholder="Car Company"
+              value={vehicleInfo.make}
+              onChange={handleVehicleChange}
+            />
+            <input
+              type="text"
+              name="model"
+              placeholder="Car Model"
+              value={vehicleInfo.model}
+              onChange={handleVehicleChange}
+            />
+            <input
+              type="number"
+              name="year"
+              placeholder="Car Year"
+              value={vehicleInfo.year}
+              onChange={handleVehicleChange}
+            />
+            <input
+              type="text"
+              name="plate"
+              placeholder="License Plate"
+              value={vehicleInfo.plate}
+              onChange={handleVehicleChange}
+            />
+          </div>
+
+          {/* Image Upload Section */}
+          <div className="image-upload">
+            <h2>Upload Vehicle Images</h2>
+            <input type="file" multiple onChange={handleImageUpload} />
+          </div>
+
+          {/* Estimate Section */}
+          {estimate && (
+            <div className="estimate">
+              <h2>Estimated Cost & Timeline</h2>
+              <p>Cost: ₹ {estimate.cost}</p>
+              <p>Estimated Time: {estimate.time}</p>
+            </div>
+          )}
+
+          {/* Date Selection */}
+          <div className="date-selection">
+            <h2>Select Date for Booking</h2>
+            <input
+              type="date"
+              value={booking.date}
+              onChange={handleDateChange}
+              required
+            />
+          </div>
+
+          {/* Error Message */}
+          {errorMessage && <div className="error">{errorMessage}</div>}
+
+          {/* Mechanic and Time Selection */}
+          {mechanics.length > 0 && (
+            <>
+              <div className="mechanic-selection">
+                <h2>Select Mechanic</h2>
+                <select value={booking.mechanic} onChange={handleMechanicChange}>
+                  <option value="">--Select Mechanic--</option>
+                  {mechanics.map((mechanic, index) => (
+                    <option key={index} value={mechanic.name}>
+                      {mechanic.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {booking.mechanic && (
+                <div className="time-selection">
+                  <h2>Select Time</h2>
+                  <select value={booking.time} onChange={handleTimeChange}>
+                    <option value="">--Select Time--</option>
+                    {mechanics
+                      .find((m) => m.name === booking.mechanic)
+                      ?.timeSlots.map((time, index) => (
+                        <option key={index} value={time}>
+                          {time}
+                        </option>
+                      ))}
+                  </select>
+                </div>
+              )}
+            </>
+          )}
+
+          {/* Booking Confirmation */}
+          {isBookingReady && (
+            <div className="booking">
+              <h2>Book Your Service</h2>
+              <button onClick={handleBooking}>Confirm Booking</button>
+            </div>
+          )}
+        </>
       )}
-
-      {/* Booking Form */}
-      <div className="booking">
-        <h2>Book Your Service</h2>
-        <form onSubmit={handleBooking}>
-          <input
-            type="date"
-            value={booking.date}
-            onChange={(e) => setBooking({ ...booking, date: e.target.value })}
-            required
-          />
-          <input
-            type="time"
-            value={booking.time}
-            onChange={(e) => setBooking({ ...booking, time: e.target.value })}
-            required
-          />
-          <button type="submit">Confirm Booking</button>
-        </form>
-      </div>
-
       <style jsx="true">{`
         .container {
           font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -179,7 +264,9 @@ function CarWash() {
         .vehicle-info,
         .image-upload,
         .estimate,
-        .booking {
+        .booking,
+        .mechanic-selection,
+        .time-selection {
           background-color: #ffffff;
           padding: 25px;
           border-radius: 10px;
@@ -190,7 +277,9 @@ function CarWash() {
         .service-selection h2,
         .vehicle-info h2,
         .estimate h2,
-        .booking h2 {
+        .booking h2,
+        .mechanic-selection h2,
+        .time-selection h2 {
           font-size: 1.8rem;
           color: #333;
           margin-bottom: 15px;
@@ -250,31 +339,16 @@ function CarWash() {
           background-color: #fff;
         }
 
-        .estimate p {
+        .error {
+          color: red;
           font-size: 1.2rem;
-          color: #555;
-          margin: 10px 0;
+          margin-top: 20px;
         }
 
-        .booking form {
-          display: flex;
-          flex-direction: column;
-          align-items: flex-start;
-        }
-
-        .booking button {
-          padding: 12px 24px;
-          background-color: #4CAF50;
-          color: white;
-          border-radius: 5px;
-          font-size: 1rem;
-          border: none;
-          cursor: pointer;
-          transition: background-color 0.3s ease;
-        }
-
-        .booking button:hover {
-          background-color: #45a049;
+        .confirmation-page {
+          font-size: 1.5rem;
+          font-weight: bold;
+          color: green;
         }
       `}</style>
     </div>
