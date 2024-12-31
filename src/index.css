@@ -1,0 +1,48 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+}
+.homeContainer {
+  /* width: 200px; */
+  /* border: 1px solid; */
+  margin: 10px;
+  box-shadow: 0 0 3px;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+.homeContainer:hover {
+  cursor: pointer;
+  transform: scale(1.05); /* Slightly enlarge the container */
+  background-color: rgba(0, 0, 0, 0.1);
+}
+.home {
+  width: 100%;
+  /* border: 1px solid; */
+}
+
+.homeContainer img {
+  transition: transform 0.3s ease;
+
+}
+
+.homeContainer:hover img {
+  transform: scale(1.1); /* Slightly enlarge the image */
+}
+
+/* You can also change the text color on hover if needed */
+.homeContainer p {
+  transition: color 0.3s ease;
+}
+
+.homeContainer:hover p {
+  color: #007bff; /* Change text color on hover */
+}
+.login{
+  box-shadow: 0 0 5px ;
+  border-radius: 40px;
+}
+.Head{
+  color:rgba(85, 50, 21, 0.815);
+}
+
