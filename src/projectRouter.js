@@ -146,12 +146,10 @@ const projectRouter = createBrowserRouter([
         element: <CarWash />, // New route for Car Wash
       },
 
-
-      
       //customer Routing
       {
-      path: "/customer-dash",
-      element: <CustomerDash />, // New route for Car Wash
+        path: "/customer-dash",
+        element: <CustomerDash />, // New route for Car Wash
       },
       {
         path: "/customer-update-details",
@@ -159,7 +157,7 @@ const projectRouter = createBrowserRouter([
       },
       {
         path: "/customer-contact-support",
-        element: <CustomerContactSupport/>, // New route for Car Wash
+        element: <CustomerContactSupport />, // New route for Car Wash
       },
       {
         path: "/service-history",
@@ -170,40 +168,32 @@ const projectRouter = createBrowserRouter([
         element: <CustomerViewService />, // New route for Car Wash
       },
       {
-        path: "/registersuccess" ,
+        path: "/registersuccess",
         element: <RegisterSuccess />, // New route for Car Wash
       },
       {
-        path: "/paymentButton" ,
+        path: "/paymentButton",
         element: <PaymentGateway />, // New route for Car Wash
       },
       {
-        path: "/notifications" ,
+        path: "/notifications",
         element: <Notifications />, // New route for Car Wash
       },
       {
-        path: "/service-booking" ,
+        path: "/service-booking",
         element: <ServiceBooking />, // New route for Car Wash
       },
       {
-        path: "/vehicle-tracking" ,
+        path: "/vehicle-tracking",
         element: <VehicleTracking />, // New route for Car Wash
       },
 
-
-      //machanic 
+      //machanic
 
       {
-        path: "/machanicdashboard" ,
+        path: "/machanicdashboard",
         element: <MechanicDashboard />, // New route for Car Wash
       },
-
-
-
-
-
-
-
     ],
   },
 ]);

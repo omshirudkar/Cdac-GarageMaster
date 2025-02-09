@@ -8,9 +8,6 @@ const ServiceBooking = () => {
   const navigate = useNavigate(); // Initialize useNavigate hook
 
   const services = [
-    "Oil Change",
-    "Tire Rotation",
-    "Brake Inspection",
     "Batteries",
     "Denting And Painting",
     "Periodic Services",
@@ -46,21 +43,21 @@ const ServiceBooking = () => {
     } else if (service === "Denting And Painting") {
       navigate(`/DentingAndPainting`);
     } else if (service === "Periodic Services") {
-      navigate(`periodicservices`);
+      navigate(`/periodicservices`);
     } else if (service === "Accidental Car Repair") {
-      navigate(`/service-details/accidental-car-repair`);
+      navigate(`/Accidentalcarrepair`);
     } else if (service === "Tyres And Wheels") {
-      navigate(`/service-details/tyres-and-wheels`);
+      navigate(`/tyresandwheels`);
     } else if (service === "Custom Services") {
-      navigate(`/service-details/custom-services`);
+      navigate(`/customservices`);
     } else if (service === "Windshield And Glass") {
-      navigate(`/service-details/windshield-and-glass`);
+      navigate(`/windshieldandglass`);
     } else if (service === "Lights And Fitments") {
-      navigate(`/service-details/lights-and-fitments`);
+      navigate(`/lightsandfitments`);
     } else if (service === "Engine Decarbonization") {
       navigate(`/engine-decarbonization`);
     } else if (service === "Car Wash") {
-      navigate(`/service-details/car-wash`);
+      navigate(`/carwash`);
     } else {
       // In case of an unrecognized service
       alert("Please select a valid service");
