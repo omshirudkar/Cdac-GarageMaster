@@ -105,7 +105,7 @@ export default function Home() {
       <div class="body">
         <div className="container text-center mt-5">
           <h1 className="Head">
-            <b>Car Garage Service Provider and Tracker</b>
+            <b>Garage Master</b>
           </h1>
         </div>
 
@@ -495,7 +495,7 @@ p.lead {
 
   .Head {
     color:rgb(102, 207, 183);
-    font-size: 3.5rem;
+    font-size: 3.9rem;
     font-weight: 800;
     text-align: center;
     text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.3);
@@ -593,7 +593,7 @@ p.lead {
 
   /* Info Section */
   .info-section {
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(252, 219, 219, 0.05);
     padding: 4rem 2rem;
     border-radius: 24px;
     margin: 4rem 0;
@@ -624,7 +624,7 @@ p.lead {
     text-align: center;
     color: #fff;
     margin: 4rem 0;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 8px 30px rgba(201, 198, 198, 0.25);
   }
 
   .btn-custom {
