@@ -31,11 +31,6 @@ function BatteryService() {
       { time: "01:00 PM", mechanic: "David Brown" },
       { time: "03:30 PM", mechanic: "Emily Davis" },
     ],
-    "2024-01-03": [
-      { time: "08:30 AM", mechanic: "Chris Wilson" },
-      { time: "12:30 PM", mechanic: "Anna Garcia" },
-      { time: "04:00 PM", mechanic: "Daniel Martinez" },
-    ],
   };
 
   const handleVehicleChange = (e) => {
@@ -47,28 +42,10 @@ function BatteryService() {
     setServiceType(e.target.value);
   };
 
-  const handleImageUpload = (e) => {
-    const uploadedFiles = Array.from(e.target.files);
-    setImages(uploadedFiles);
-  };
-
   const getEstimate = () => {
-    if (serviceType) {
-      let cost, time;
-      if (serviceType === "basic") {
-        cost = 1000;
-        time = "1-2 hours";
-      } else if (serviceType === "advanced") {
-        cost = 2000;
-        time = "2-3 hours";
-      } else {
-        cost = 0;
-        time = "Unknown";
-      }
-      setEstimate({ cost, time });
-    } else {
-      setEstimate({ cost: 0, time: "Please select a service" });
-    }
+    let cost = serviceType === "basic" ? 1000 : 2000;
+    let time = serviceType === "basic" ? "1-2 hours" : "2-3 hours";
+    setEstimate({ cost, time });
   };
 
   const handleDateChange = (e) => {
@@ -78,114 +55,146 @@ function BatteryService() {
   };
 
   const handleTimeSelect = (slot) => {
-    setBooking((prev) => ({
-      ...prev,
+    setBooking({
+      date: booking.date,
       time: slot.time,
       mechanic: slot.mechanic,
-    }));
-    console.log("Selected Slot:", slot);
+    });
   };
 
   const handleBooking = (e) => {
     e.preventDefault();
-    console.log("Booking details:", booking);
     navigate("/paymentButton");
   };
 
   return (
-    <div className="container">
-      <div className="service-selection">
-        <h2>Select Your Battery Service</h2>
-        <select value={serviceType} onChange={handleServiceChange}>
+    <div style={styles.container}>
+      <h2 style={styles.title}>Battery Service Booking</h2>
+      <div style={styles.card}>
+        <label>Service Type:</label>
+        <select
+          value={serviceType}
+          onChange={handleServiceChange}
+          style={styles.input}
+        >
           <option value="">--Select Service--</option>
-          <option value="basic">Basic Battery Service</option>
-          <option value="advanced">Advanced Battery Service</option>
+          <option value="basic">Basic Service</option>
+          <option value="advanced">Advanced Service</option>
         </select>
-        <button onClick={getEstimate}>Get Estimate</button>
+        <button onClick={getEstimate} style={styles.button}>
+          Get Estimate
+        </button>
+        {estimate && (
+          <p style={styles.estimate}>
+            Estimated Cost: ₹{estimate.cost} | Time: {estimate.time}
+          </p>
+        )}
       </div>
 
-      <div className="vehicle-info">
-        <h2>Vehicle Information</h2>
+      <div style={styles.card}>
+        <h3>Vehicle Information</h3>
         <input
           type="text"
           name="make"
-          placeholder="Car Company"
-          value={vehicleInfo.make}
+          placeholder="Car Make"
+          style={styles.input}
           onChange={handleVehicleChange}
         />
         <input
           type="text"
           name="model"
           placeholder="Car Model"
-          value={vehicleInfo.model}
+          style={styles.input}
           onChange={handleVehicleChange}
         />
         <input
           type="number"
           name="year"
-          placeholder="Car Year"
-          value={vehicleInfo.year}
+          placeholder="Year"
+          style={styles.input}
           onChange={handleVehicleChange}
         />
         <input
           type="text"
           name="plate"
           placeholder="License Plate"
-          value={vehicleInfo.plate}
+          style={styles.input}
           onChange={handleVehicleChange}
         />
       </div>
 
-      <div className="image-upload">
-        <h2>Upload Vehicle Images</h2>
-        <input type="file" multiple onChange={handleImageUpload} />
-      </div>
-
-      {estimate && (
-        <div className="estimate">
-          <h2>Estimated Cost & Timeline</h2>
-          <p>Cost: ₹ {estimate.cost}</p>
-          <p>Estimated Time: {estimate.time}</p>
-        </div>
-      )}
-
-      <div className="booking">
-        <h2>Book Your Service</h2>
-        <form onSubmit={handleBooking}>
-          <input
-            type="date"
-            value={booking.date}
-            onChange={handleDateChange}
-            required
-          />
-          <div className="availability">
-            <h3>Available Time Slots</h3>
-            {availability.length > 0 ? (
-              <div className="time-slots">
-                {availability.map((slot, index) => (
-                  <button
-                    key={index}
-                    type="button"
-                    className={`time-slot ${
-                      booking.time === slot.time ? "selected" : ""
-                    }`}
-                    onClick={() => handleTimeSelect(slot)}
-                  >
-                    {slot.time} - {slot.mechanic}
-                  </button>
-                ))}
-              </div>
-            ) : (
-              <p>No slots available. Please select another date.</p>
-            )}
+      <div style={styles.card}>
+        <h3>Choose Date & Time</h3>
+        <input type="date" style={styles.input} onChange={handleDateChange} />
+        {availability.length > 0 && (
+          <div>
+            {availability.map((slot, index) => (
+              <button
+                key={index}
+                style={styles.slotButton}
+                onClick={() => handleTimeSelect(slot)}
+              >
+                {slot.time} - {slot.mechanic}
+              </button>
+            ))}
           </div>
-          <button type="submit" disabled={!booking.time}>
-            Confirm Booking
-          </button>
-        </form>
+        )}
       </div>
+
+      <button
+        onClick={handleBooking}
+        style={styles.button}
+        disabled={!booking.time}
+      >
+        Confirm Booking
+      </button>
     </div>
   );
 }
+
+const styles = {
+  container: {
+    textAlign: "center",
+    padding: "20px",
+    backgroundColor: "#f5f5f5",
+  },
+  title: { fontSize: "24px", fontWeight: "bold", marginBottom: "20px" },
+  card: {
+    backgroundColor: "white",
+    padding: "20px",
+    margin: "10px auto",
+    width: "90%",
+    maxWidth: "400px",
+    borderRadius: "10px",
+    boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
+  },
+  input: {
+    width: "100%",
+    padding: "10px",
+    margin: "10px 0",
+    border: "1px solid #ccc",
+    borderRadius: "5px",
+  },
+  button: {
+    backgroundColor: "#ff9800",
+    color: "white",
+    padding: "10px 15px",
+    border: "none",
+    borderRadius: "5px",
+    cursor: "pointer",
+    fontSize: "16px",
+    marginTop: "10px",
+  },
+  slotButton: {
+    backgroundColor: "#4caf50",
+    color: "white",
+    padding: "8px",
+    margin: "5px",
+    border: "none",
+    borderRadius: "5px",
+    cursor: "pointer",
+  },
+  estimate: { fontSize: "16px", fontWeight: "bold", color: "#333" },
+};
 
 export default BatteryService;

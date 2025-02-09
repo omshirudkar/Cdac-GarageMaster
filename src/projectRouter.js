@@ -42,7 +42,7 @@ import Notifications from "./Components/customers/Notifications";
 import ServiceBooking from "./Components/customers/ServiceBooking";
 import ServiceHistory from "./Components/customers/ServiceHistory";
 import VehicleTracking from "./Components/customers/VehicleTracking";
-import MechanicDashboard from "./Components/machanic/MachanicDashboard";
+import MechanicDashboard from "./Components/admin/MachanicDashboard";
 
 const projectRouter = createBrowserRouter([
   {

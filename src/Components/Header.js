@@ -3,59 +3,63 @@ import { Link } from "react-router-dom";
 
 export default function Header() {
   return (
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
-      <div class="container-fluid">
-   
+    <nav className="navbar navbar-expand-lg navbar-light bg-body-tertiary">
+      <div className="container-fluid px-4">
+        {" "}
+        {/* Added padding for better alignment */}
+        {/* Brand Name */}
+        <Link className="navbar-brand fw-bold" to="/">
+          Garage Master
+        </Link>
+        {/* Toggler Button for Mobile */}
         <button
-          class="navbar-toggler"
+          className="navbar-toggler"
           type="button"
           data-bs-toggle="collapse"
-          data-bs-target="#navbarSupportedContent"
-          aria-controls="navbarSupportedContent"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
           aria-expanded="false"
           aria-label="Toggle navigation"
         >
-          <span class="navbar-toggler-icon"></span>
+          <span className="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item">
-              <Link class="nav-link active" aria-current="page" to="/">
+        {/* Navbar Links */}
+        <div className="collapse navbar-collapse" id="navbarNav">
+          <ul className="navbar-nav ms-auto">
+            {" "}
+            {/* Aligns menu items to the right */}
+            <li className="nav-item">
+              <Link className="nav-link active" to="/">
                 Home
               </Link>
             </li>
-            <li class="nav-item">
-              <Link class="nav-link" to="/contact">
-                Contact us
+            <li className="nav-item">
+              <Link className="nav-link" to="/contact">
+                Contact Us
               </Link>
             </li>
-            <li class="nav-item">
-              <Link class="nav-link" to="/about">
+            <li className="nav-item">
+              <Link className="nav-link" to="/about">
                 About
               </Link>
             </li>
-            <li class="nav-item">
-              <Link class="nav-link" to="/register">
+            <li className="nav-item">
+              <Link className="nav-link" to="/register">
                 Register
               </Link>
             </li>
-            <li class="nav-item">
-              <Link class="nav-link" to="/login">
+            <li className="nav-item">
+              <Link className="nav-link" to="/login">
                 Login
               </Link>
             </li>
-
           </ul>
-          <form class="d-flex" role="search">
-            <input
-              class="form-control me-2"
-              type="search"
-              placeholder="Search"
-              aria-label="Search"
-            />
-            <button class="btn btn-outline-success" type="submit">
-              Search
-            </button>
+
+          {/* Search Bar */}
+          <form className="d-flex ms-4">
+            {" "}
+            {/* Added margin for better spacing */}
+     
           </form>
         </div>
       </div>

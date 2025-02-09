@@ -1,4 +1,4 @@
-import React from "react";
+  import React from "react";
 import img from "../assests/periodicservices1.jpg";
 import bat1 from "../assests/acservicerepair5.jpg";
 import bat2 from "../assests/android-app-store.png";
@@ -76,48 +76,11 @@ export default function Home() {
 
   const navigator = useNavigate();
 
-  // function f1() {
-  //   navigator("/login");
-  // }
+  function f1() {
+    navigator("/login");
+  }
 
-  // function f2() {
-  //   navigator("/batteriesservices");
-  // }
-
-  // function f3() {
-  //   navigator("/DentingAndPainting");
-  // }
-
-  // function f4() {
-  //   navigator("/periodicservices");
-  // }
-
-  // function f5() {
-  //   navigator("/accidentalCarRepair");
-  // }
-
-  // function f6() {
-  //   navigator("/tyresandwheels");
-  // }
-  // function f7() {
-  //   navigator("/customservices");
-  // }
-
-  // function f8() {
-  //   navigator("/windshieldandglass");
-  // }
-
-  // function f9() {
-  //   navigator("/lightsandfitments");
-  // }
-
-  // function f10() {
-  //   navigator("/engine-decarbonization");
-  // }
-  // function f11() {
-  //   navigator("/carwash");
-  // }
-
+  
   return (
     <>
       <div>
@@ -149,7 +112,7 @@ export default function Home() {
         {/* Services Section */}
         <div className="container-fluid home text-center p-5 mt-3 me-3">
           <div className="row d-flex justify-content-center">
-            <div className="col-xl-2 img-fluid homeContainer p-2"  >
+            <div className="col-xl-2 img-fluid homeContainer p-2">
               <img src={bat3} alt="" />
               <b style={{ fontSize: "15px" }}>
                 <h6>
@@ -157,7 +120,7 @@ export default function Home() {
                 </h6>
               </b>
             </div>
-            <div className="col-xl-2 img-fluid homeContainer p-2" >
+            <div className="col-xl-2 img-fluid homeContainer p-2">
               <img src={bat5} alt="" />
               <b style={{ fontSize: "15px" }}>
                 <h6>
@@ -165,7 +128,7 @@ export default function Home() {
                 </h6>
               </b>
             </div>
-            <div className="col-xl-2 img-fluid homeContainer p-2" >
+            <div className="col-xl-2 img-fluid homeContainer p-2">
               <img src={img} alt="" />
               <b style={{ fontSize: "15px" }}>
                 <h6>
@@ -173,7 +136,7 @@ export default function Home() {
                 </h6>
               </b>
             </div>
-            <div className="col-xl-2 img-fluid homeContainer p-2" >
+            <div className="col-xl-2 img-fluid homeContainer p-2">
               <img src={acci} alt="" />
               <b style={{ fontSize: "15px" }}>
                 <h6>
@@ -181,7 +144,7 @@ export default function Home() {
                 </h6>
               </b>
             </div>
-            <div className="col-xl-2 img-fluid homeContainer p-2" >
+            <div className="col-xl-2 img-fluid homeContainer p-2">
               <img src={tyre} alt="" />
               <b style={{ fontSize: "15px" }}>
                 <h6>
@@ -189,7 +152,7 @@ export default function Home() {
                 </h6>
               </b>
             </div>
-            <div className="col-xl-2 img-fluid homeContainer p-2" >
+            <div className="col-xl-2 img-fluid homeContainer p-2">
               <img src={custom} alt="" />
               <b style={{ fontSize: "15px" }}>
                 <h6>
@@ -197,7 +160,7 @@ export default function Home() {
                 </h6>
               </b>
             </div>
-            <div className="col-xl-2 img-fluid homeContainer p-2" >
+            <div className="col-xl-2 img-fluid homeContainer p-2">
               <img src={wind} alt="" />
               <b style={{ fontSize: "15px" }}>
                 <h6>
@@ -205,7 +168,7 @@ export default function Home() {
                 </h6>
               </b>
             </div>
-            <div className="col-xl-2 img-fluid homeContainer p-2" >
+            <div className="col-xl-2 img-fluid homeContainer p-2">
               <img src={light} alt="" />
               <b style={{ fontSize: "15px" }}>
                 <h6>
@@ -344,7 +307,7 @@ export default function Home() {
               <p class="lead text-muted mb-4">
                 Repair services that come with our commitment to quality.
               </p>
-              <button  class="btn btn-danger btn-lg">
+              <button class="btn btn-danger btn-lg" onClick={f1}>
                 Book an Appointment
               </button>
             </div>
@@ -812,23 +775,35 @@ p.lead {
 }
 
 /* Hero Text */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
 .hero-text {
   position: absolute;
-  top: 40%;
+  top: 35%;
   left: 50%;
   transform: translate(-50%, -50%);
   color: white;
   text-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Adds depth to text */
   z-index: 2; /* Ensure text is on top */
   padding: 1rem;
-  animation: fadeIn 1.5s ease-in-out; /* Smooth fade-in animation */
+  animation: fadeIn 1.5s ease-in-out forwards; /* Smooth fade-in animation */
 }
+
 
 .hero-text h1 {
   font-size: 2.5rem; /* Larger font size for visual impact */
   font-weight: bold;
   margin-bottom: 1rem;
-  line-height: 1.2; /* Better spacing between lines */
+  line-height: 3.5; /* Better spacing between lines */
 }
 
 .hero-text p {

@@ -1,106 +1,164 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; // Importing useNavigate hook for navigation
+import { useNavigate } from "react-router-dom";
 
 export default function Register() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [mobile, setMobile] = useState("");
-  const [role, setRole] = useState("user"); // Default role is 'user'
+  const [role, setRole] = useState("user");
   const [message, setMessage] = useState("");
 
-  const navigate = useNavigate(); // Hook for navigation
+  const navigate = useNavigate();
 
-  // Email validation regex pattern
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Check if any fields are empty
     if (!name || !email || !password || !mobile || !role) {
       setMessage("Please fill in all fields");
       return;
     }
 
-    // Validate email format
     if (!emailRegex.test(email)) {
       setMessage("Please enter a valid email address");
       return;
     }
 
-    // Store the data in localStorage (could be replaced with API call)
     localStorage.setItem("name", name);
     localStorage.setItem("email", email);
     localStorage.setItem("password", password);
     localStorage.setItem("mobile", mobile);
     localStorage.setItem("role", role);
 
-    setMessage("Sign up successful! You can now log in.");
+    setMessage("Sign up successful! Redirecting...");
 
-    // Navigate to login page after successful registration
     setTimeout(() => {
-      navigate("/login"); // Redirect to login page
-    }, 2000); // Wait for 2 seconds before redirecting
+      navigate("/login");
+    }, 2000);
   };
 
   return (
-    <div>
-      <h2>Sign Up</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Name: </label>
+    <div style={styles.container}>
+      <div style={styles.card}>
+        <h2 style={styles.heading}>Create an Account</h2>
+        <form onSubmit={handleSubmit} style={styles.form}>
           <input
             type="text"
+            placeholder="Full Name"
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
+            style={styles.input}
           />
-        </div>
-        <div>
-          <label>Email: </label>
           <input
             type="email"
+            placeholder="Email Address"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+            style={styles.input}
           />
-        </div>
-        <div>
-          <label>Password: </label>
           <input
             type="password"
+            placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
+            style={styles.input}
           />
-        </div>
-        <div>
-          <label>Mobile Number: </label>
           <input
             type="tel"
+            placeholder="Mobile Number"
             value={mobile}
             onChange={(e) => setMobile(e.target.value)}
             required
-            pattern="[0-9]{10}" // This regex enforces 10 digit mobile number format
-            placeholder="Enter your 10-digit mobile number"
+            pattern="[0-9]{10}"
+            style={styles.input}
           />
-        </div>
-        <div>
-          <label>Role: </label>
           <select
             value={role}
             onChange={(e) => setRole(e.target.value)}
             required
+            style={styles.select}
           >
             <option value="user">User</option>
             <option value="admin">Admin</option>
             <option value="mechanic">Mechanic</option>
           </select>
-        </div>
-        <button type="submit">Sign Up</button>
-      </form>
-      {message && <p>{message}</p>}
+          <button type="submit" style={styles.button}>
+            Sign Up
+          </button>
+        </form>
+        {message && <p style={styles.message}>{message}</p>}
+      </div>
     </div>
   );
 }
+
+const styles = {
+  container: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    height: "100vh",
+    background: "linear-gradient(to right, #2C3E50, #4CA1AF)",
+  },
+  card: {
+    background: "#fff",
+    padding: "30px",
+    borderRadius: "12px",
+    boxShadow: "0 10px 20px rgba(0, 0, 0, 0.2)",
+    width: "360px",
+    textAlign: "center",
+  },
+  heading: {
+    marginBottom: "20px",
+    fontSize: "24px",
+    fontWeight: "bold",
+    color: "#333",
+  },
+  form: {
+    display: "flex",
+    flexDirection: "column",
+  },
+  input: {
+    width: "100%",
+    padding: "12px",
+    marginBottom: "15px",
+    border: "1px solid #ddd",
+    borderRadius: "8px",
+    fontSize: "16px",
+    outline: "none",
+    transition: "0.3s ease",
+  },
+  select: {
+    width: "100%",
+    padding: "12px",
+    marginBottom: "15px",
+    border: "1px solid #ddd",
+    borderRadius: "8px",
+    fontSize: "16px",
+    background: "#fff",
+    outline: "none",
+    cursor: "pointer",
+  },
+  button: {
+    background: "#27AE60",
+    border: "none",
+    padding: "12px",
+    borderRadius: "8px",
+    fontSize: "18px",
+    cursor: "pointer",
+    color: "#fff",
+    fontWeight: "bold",
+    transition: "0.3s ease",
+  },
+  message: {
+    marginTop: "15px",
+    fontWeight: "bold",
+    fontSize: "16px",
+    color: "#e74c3c",
+  },
+};
