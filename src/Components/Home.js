@@ -400,7 +400,7 @@ export default function Home() {
 
   
  .body {
-    background: linear-gradient(135deg, #d9a7c7 0%, #fffcdc 100%);
+    background: linear-gradient(135deg,rgb(201, 223, 243) 0%, #fffcdc 100%);
     color: rgb(12, 12, 12);
     font-family: "Poppins", sans-serif;
     padding: 0;
@@ -618,7 +618,7 @@ p.lead {
 
   /* CTA Section */
   .cta-section {
-    background: linear-gradient(45deg, #fb7185 0%, #f43f5e 100%);
+    background: linear-gradient(45deg,rgb(236, 139, 154) 0%, #f43f5e 100%);
     padding: 4rem 2rem;
     border-radius: 24px;
     text-align: center;
