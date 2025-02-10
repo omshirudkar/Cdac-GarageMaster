@@ -70,7 +70,7 @@ const Accidental_Car_Repair = () => {
   if (bookingConfirmed) {
     return (
       <div className="confirmation-page">
-        <h1>Booking Confirmation</h1>
+        <h1>Booking Confirmed ✅</h1>
         <p><strong>Vehicle:</strong> {bookingDetails.vehicle}</p>
         <p><strong>Accident Date:</strong> {bookingDetails.accidentDate}</p>
         <p><strong>Accident Description:</strong> {bookingDetails.accidentDescription}</p>
@@ -78,29 +78,29 @@ const Accidental_Car_Repair = () => {
         <p><strong>Contact Phone:</strong> {bookingDetails.contactDetails.phone}</p>
         <p><strong>Selected Mechanic:</strong> {bookingDetails.mechanic.name}</p>
         <p><strong>Selected Time:</strong> {bookingDetails.time}</p>
-        <button onClick={() => navigate("/paymentButton")}>Confirm Booking</button>
+        <button onClick={() => navigate("/paymentButton")}>Proceed to Payment 💳</button>
       </div>
     );
   }
 
   return (
     <div className="repair-form-container">
-      <h1>Accidental Car Repair Request</h1>
+      <h1>🚗 Accidental Car Repair Request</h1>
 
       <form className="repair-form">
-        <div>
-          <label>Vehicle Information (Car Model, Plate Number):</label>
+        <div className="input-group">
+          <label>🚘 Vehicle Information:</label>
           <input
             type="text"
             value={vehicle}
             onChange={(e) => setVehicle(e.target.value)}
-            placeholder="Enter vehicle details"
+            placeholder="Car Model, Plate Number"
             required
           />
         </div>
 
-        <div>
-          <label>Accident Date:</label>
+        <div className="input-group">
+          <label>📅 Accident Date:</label>
           <input
             type="date"
             value={accidentDate}
@@ -109,43 +109,43 @@ const Accidental_Car_Repair = () => {
           />
         </div>
 
-        <div>
-          <label>Accident Description:</label>
+        <div className="input-group">
+          <label>📝 Accident Description:</label>
           <textarea
             value={accidentDescription}
             onChange={(e) => setAccidentDescription(e.target.value)}
-            placeholder="Describe the accident details"
+            placeholder="Describe the accident..."
             required
           />
         </div>
 
-        <div>
-          <label>Upload Damage Photos (if any):</label>
+        <div className="input-group">
+          <label>📷 Upload Damage Photos:</label>
           <input type="file" multiple accept="image/*" onChange={handleImageUpload} />
         </div>
 
-        <div>
-          <label>Contact Name:</label>
+        <div className="input-group">
+          <label>👤 Contact Name:</label>
           <input
             type="text"
             value={contactDetails.name}
             onChange={(e) =>
               setContactDetails({ ...contactDetails, name: e.target.value })
             }
-            placeholder="Enter your full name"
+            placeholder="Your Name"
             required
           />
         </div>
 
-        <div>
-          <label>Contact Phone Number:</label>
+        <div className="input-group">
+          <label>📞 Contact Phone:</label>
           <input
             type="tel"
             value={contactDetails.phone}
             onChange={(e) =>
               setContactDetails({ ...contactDetails, phone: e.target.value })
             }
-            placeholder="Enter your phone number"
+            placeholder="Your Phone Number"
             required
           />
         </div>
@@ -155,29 +155,28 @@ const Accidental_Car_Repair = () => {
 
       {availableMechanics.length > 0 && (
         <div className="mechanic-selection">
-          <h2>Select a Mechanic and Time</h2>
+          <h2>🔧 Select a Mechanic & Time</h2>
           {availableMechanics.map((mechanic) => (
-            <div key={mechanic.id}>
+            <div key={mechanic.id} className="mechanic-box">
               <h3>{mechanic.name}</h3>
               <div>
                 {mechanic.available.map((timeSlot, index) => (
-                  <div key={index}>
+                  <label key={index} className="time-slot">
                     <input
                       type="radio"
-                      id={`mechanic-${mechanic.id}-time-${index}`}
                       name="time"
                       onChange={() => {
                         setSelectedMechanic(mechanic);
                         setSelectedTime(timeSlot);
                       }}
                     />
-                    <label htmlFor={`mechanic-${mechanic.id}-time-${index}`}>{timeSlot}</label>
-                  </div>
+                    {timeSlot}
+                  </label>
                 ))}
               </div>
             </div>
           ))}
-          <button onClick={confirmBooking}>Book Appointment</button>
+          <button onClick={confirmBooking}>Confirm Booking ✅</button>
         </div>
       )}
 
@@ -186,32 +185,63 @@ const Accidental_Car_Repair = () => {
           max-width: 600px;
           margin: auto;
           padding: 20px;
-          border: 1px solid #ddd;
-          border-radius: 8px;
-          background-color: #f9f9f9;
+          border-radius: 10px;
+          background-color: #ffffff;
+          box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
         }
 
-        .error-message {
-          color: red;
+        h1 {
+          text-align: center;
+          color: #333;
+        }
+
+        .input-group {
+          margin-bottom: 15px;
+        }
+
+        label {
           font-weight: bold;
+        }
+
+        input, textarea {
+          width: 100%;
+          padding: 8px;
+          border: 1px solid #ccc;
+          border-radius: 5px;
+          margin-top: 5px;
         }
 
         .mechanic-selection {
           margin-top: 20px;
         }
 
-        button {
-          background-color: #4caf50;
-          color: white;
+        .mechanic-box {
+          background: #f1f1f1;
           padding: 10px;
-          border: none;
-          border-radius: 4px;
+          border-radius: 8px;
+          margin-bottom: 10px;
+        }
+
+        .time-slot {
+          display: inline-block;
+          padding: 5px;
+          margin-right: 10px;
           cursor: pointer;
-          margin-top: 10px;
+        }
+
+        button {
+          width: 100%;
+          padding: 10px;
+          background-color: #28a745;
+          color: white;
+          border: none;
+          border-radius: 5px;
+          font-size: 16px;
+          cursor: pointer;
         }
 
         button:hover {
-          background-color: #45a049;
+          background-color: #218838;
         }
       `}</style>
     </div>

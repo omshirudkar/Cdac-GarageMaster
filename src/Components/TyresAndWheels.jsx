@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 
 function TyresAndWheels() {
   const navigate = useNavigate();
-
   const [serviceType, setServiceType] = useState("");
   const [vehicleInfo, setVehicleInfo] = useState({
     make: "",
@@ -24,8 +23,8 @@ function TyresAndWheels() {
   ]);
   const [availableMechanics, setAvailableMechanics] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
-  const [bookingConfirmed, setBookingConfirmed] = useState(false); // Add state to track confirmation
-  const [bookingDetails, setBookingDetails] = useState(null); // Store confirmed booking details
+  const [bookingConfirmed, setBookingConfirmed] = useState(false);
+  const [bookingDetails, setBookingDetails] = useState(null);
 
   const handleVehicleChange = (e) => {
     const { name, value } = e.target;
@@ -43,8 +42,7 @@ function TyresAndWheels() {
 
   const getEstimate = () => {
     if (serviceType) {
-      let cost;
-      let time;
+      let cost, time;
       if (serviceType === "tyreChange") {
         cost = 300;
         time = "1-2 hours";
@@ -70,13 +68,8 @@ function TyresAndWheels() {
       }))
       .filter((mechanic) => mechanic.available.length > 0);
 
-    if (filteredMechanics.length > 0) {
-      setAvailableMechanics(filteredMechanics);
-      setErrorMessage("");
-    } else {
-      setAvailableMechanics([]);
-      setErrorMessage("No mechanics are available on the selected date.");
-    }
+    setAvailableMechanics(filteredMechanics.length > 0 ? filteredMechanics : []);
+    setErrorMessage(filteredMechanics.length > 0 ? "" : "No mechanics available on this date.");
   };
 
   const handleBooking = (e) => {
@@ -86,29 +79,29 @@ function TyresAndWheels() {
       alert("Please complete all booking details.");
       return;
     }
-
-    // Set the booking confirmation state and details
-    setBookingDetails({
-      serviceType,
-      vehicleInfo,
-      images,
-      booking,
-    });
-    setBookingConfirmed(true); // Confirm the booking
+    setBookingDetails({ serviceType, vehicleInfo, images, booking });
+    setBookingConfirmed(true);
   };
 
-  // Confirm booking and show the details
   const confirmBooking = () => {
-    // Proceed to the next step, e.g., payment or success
-   
-    // Navigate or perform other actions here
-    navigate("/paymentButton"); // Example: navigating to a payment page
+    navigate("/paymentButton");
   };
 
   return (
     <div className="container">
+      <style>{`
+        .container { max-width: 600px; margin: auto; padding: 20px; font-family: Arial, sans-serif; }
+        h1, h2 { text-align: center; color: #333; }
+        .service-selection, .vehicle-info, .image-upload, .estimate, .booking, .confirmation-page {
+          background: #f8f8f8; padding: 15px; margin: 10px 0; border-radius: 10px; box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        input, select, button { width: 100%; padding: 10px; margin: 5px 0; border-radius: 5px; border: 1px solid #ccc; }
+        button { background: #007BFF; color: white; font-size: 16px; border: none; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        .error { color: red; font-weight: bold; text-align: center; }
+      `}</style>
       <h1>Tyres and Wheels Service</h1>
-
+      
       <div className="service-selection">
         <h2>Select Service</h2>
         <select value={serviceType} onChange={handleServiceChange}>
@@ -121,34 +114,10 @@ function TyresAndWheels() {
 
       <div className="vehicle-info">
         <h2>Vehicle Information</h2>
-        <input
-          type="text"
-          name="make"
-          placeholder="Car Make"
-          value={vehicleInfo.make}
-          onChange={handleVehicleChange}
-        />
-        <input
-          type="text"
-          name="model"
-          placeholder="Car Model"
-          value={vehicleInfo.model}
-          onChange={handleVehicleChange}
-        />
-        <input
-          type="number"
-          name="year"
-          placeholder="Car Year"
-          value={vehicleInfo.year}
-          onChange={handleVehicleChange}
-        />
-        <input
-          type="text"
-          name="plate"
-          placeholder="License Plate"
-          value={vehicleInfo.plate}
-          onChange={handleVehicleChange}
-        />
+        <input type="text" name="make" placeholder="Car Make" value={vehicleInfo.make} onChange={handleVehicleChange} />
+        <input type="text" name="model" placeholder="Car Model" value={vehicleInfo.model} onChange={handleVehicleChange} />
+        <input type="number" name="year" placeholder="Car Year" value={vehicleInfo.year} onChange={handleVehicleChange} />
+        <input type="text" name="plate" placeholder="License Plate" value={vehicleInfo.plate} onChange={handleVehicleChange} />
       </div>
 
       <div className="image-upload">
@@ -166,56 +135,14 @@ function TyresAndWheels() {
 
       <div className="booking">
         <h2>Book Your Service</h2>
-        <form onSubmit={handleBooking}>
-          <input
-            type="date"
-            value={booking.date}
-            onChange={(e) => handleDateChange(e.target.value)}
-            required
-          />
-          {errorMessage && <p className="error">{errorMessage}</p>}
-
-          {availableMechanics.length > 0 && (
-            <div className="mechanic-selection">
-              <h3>Select Mechanic and Time</h3>
-              {availableMechanics.map((mechanic) => (
-                <div key={mechanic.id}>
-                  <h4>{mechanic.name}</h4>
-                  {mechanic.available.map((slot, index) => (
-                    <div key={index}>
-                      <input
-                        type="radio"
-                        id={`mechanic-${mechanic.id}-${index}`}
-                        name="mechanic"
-                        value={`${mechanic.name}|${slot}`}
-                        onChange={() =>
-                          setBooking({
-                            ...booking,
-                            mechanic: mechanic.name,
-                            time: slot,
-                          })
-                        }
-                      />
-                      <label htmlFor={`mechanic-${mechanic.id}-${index}`}>{slot}</label>
-                    </div>
-                  ))}
-                </div>
-              ))}
-            </div>
-          )}
-
-          <button type="submit">Book Appointment</button>
-        </form>
+        <input type="date" value={booking.date} onChange={(e) => handleDateChange(e.target.value)} required />
+        {errorMessage && <p className="error">{errorMessage}</p>}
+        <button onClick={handleBooking}>Book Appointment</button>
       </div>
 
       {bookingConfirmed && (
         <div className="confirmation-page">
           <h1>Booking Confirmation</h1>
-          <p><strong>Service:</strong> {bookingDetails.serviceType}</p>
-          <p><strong>Vehicle:</strong> {bookingDetails.vehicleInfo.make} {bookingDetails.vehicleInfo.model}</p>
-          <p><strong>License Plate:</strong> {bookingDetails.vehicleInfo.plate}</p>
-          <p><strong>Selected Mechanic:</strong> {bookingDetails.booking.mechanic}</p>
-          <p><strong>Selected Time:</strong> {bookingDetails.booking.time}</p>
           <button onClick={confirmBooking}>Confirm Booking</button>
         </div>
       )}

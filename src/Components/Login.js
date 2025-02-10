@@ -78,15 +78,16 @@ export default function Login() {
               <option value="mechanic">Mechanic</option>
             </select>
           </div>
-          <button type="submit" style={styles.button}>
-            Log In
-          </button>
+          <button type="submit" style={styles.button}>Log In</button>
         </form>
         {message && (
           <p style={message.includes("successful") ? styles.success : styles.error}>
             {message}
           </p>
         )}
+        <p style={styles.registerLink}>
+          Don't have an account? <span onClick={() => navigate("/register")} style={styles.link}>Sign Up</span>
+        </p>
       </div>
     </div>
   );
@@ -191,5 +192,11 @@ const styles = {
     marginTop: "10px",
     fontSize: "14px",
   },
+  
 };
 
+styles.link = {
+  color: "#007bff",
+  cursor: "pointer", // Change cursor to pointer on hover
+  textDecoration: "underline",
+};
